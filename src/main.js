@@ -1,5 +1,4 @@
 // Data
-
 const api = axios.create({
   baseURL: "https://api.themoviedb.org/3/",
   headers: {
@@ -11,9 +10,6 @@ const api = axios.create({
 });
 
 let lang = navigator.languages[1];
-
-
-
 
 const countries = [
   {
@@ -58,6 +54,89 @@ const countries = [
   },
 ]
 
+const textsLanguages = [
+  { 
+    name:'en',
+    languageText: 'Language',
+    tendencesTitle: 'Tendences', 
+    categoriesTitle: 'Categories',
+    likedTitle: 'Favorites Movies',
+    relatedTitle: 'Similar Movies',
+    btnMore: 'See More',
+    inputSearch: 'Avengers',
+  },
+  {
+    name:'es',
+    languageText: 'Idioma',
+    tendencesTitle: 'Tendencias', 
+    categoriesTitle: 'Categorías',
+    likedTitle: 'Películas Favoritas',
+    relatedTitle: 'Películas Similares',
+    btnMore: 'Ver más',
+    inputSearch: 'Vengadores',
+  },
+  {
+    name:'pt',
+    languageText: 'Linguagem',
+    tendencesTitle: 'Tendências', 
+    categoriesTitle: 'Categorias',
+    likedTitle: 'Filmes favoritos',
+    relatedTitle: 'Filmes semelhantes',
+    btnMore: 'Ver mais',
+    inputSearch: 'Vingadores',
+  },
+  {
+    name:'fr',
+    languageText: 'Langue',
+    tendencesTitle: 'Tendances', 
+    categoriesTitle: 'Catégories',
+    likedTitle: 'Films favoris',
+    relatedTitle: 'Films similaires',
+    btnMore: 'Voir plus',
+    inputSearch: 'Vengeurs',
+  },
+  {
+    name:'it',
+    languageText: 'Lingua',
+    tendencesTitle: 'Tendenze', 
+    categoriesTitle: 'Categorie',
+    likedTitle: 'Film preferiti',
+    relatedTitle: 'Film simili',
+    btnMore: 'Vedi altro',
+    inputSearch: 'Vendicatori',
+  },
+  {
+    name:'de',
+    languageText: 'Sprache',
+    tendencesTitle: 'Tendenzen', 
+    categoriesTitle: 'Kategorien',
+    likedTitle: 'Lieblingsfilme',
+    relatedTitle: 'Ähnliche Filme',
+    btnMore: 'Mehr sehen',
+    inputSearch: 'Rächer',
+  },
+  {
+    name:'ru',
+    languageText: 'Язык',
+    tendencesTitle: 'Тенденции', 
+    categoriesTitle: 'Категории',
+    likedTitle: 'Избранные фильмы',
+    relatedTitle: 'Похожие фильмы',
+    btnMore: 'Узнать больше',
+    inputSearch: 'Мстители',
+  },
+  {
+    name:'zh',
+    languageText: '语',
+    tendencesTitle: '趋势', 
+    categoriesTitle: '类别',
+    likedTitle: '最喜欢的电影',
+    relatedTitle: '类似电影',
+    btnMore: '看更多',
+    inputSearch: '复仇者联盟',
+  },
+]
+
 function getLanguages() {
   countries.forEach((country) => {
     const languageOption = document.createElement('option');
@@ -70,9 +149,27 @@ function getLanguages() {
 }
 getLanguages();
 
+
+
+
+
+function changeTitles() {
+  const textLang = lang.split('-')[0]
+  const select = textsLanguages.find( ({name}) => name == textLang)
+  languageText.textContent = select.languageText,
+  tendencesTitle.textContent = select.tendencesTitle,
+  categoriesTitle.textContent = select.categoriesTitle,
+  likedTitle.textContent = select.likedTitle,
+  relatedTitle.textContent = select.RelatedTitle,
+  btnMore.textContent = select.btnMore,
+  inputSearch.placeholder = select.inputSearch
+}
+changeTitles()
+
 languageOptions.addEventListener("change", (event) => {
   lang = event.target.value;
   homePage();
+  changeTitles()
 });
 
 
@@ -135,10 +232,17 @@ function createMovies(
       `https://image.tmdb.org/t/p/w300${movie.poster_path}`
     );
     movieImg.addEventListener("error", () => {
-      movieImg.setAttribute(
-        "src",
-        `images/bg-default-${movie.genre_ids[0]}.png`
-      );
+      if (movie.genre_ids[0]) {
+        movieImg.setAttribute(
+          "src",
+          `images/w300/bg-default-${movie.genre_ids[0]}.png`
+        );
+      } else {
+        movieImg.setAttribute(
+          "src",
+          `images/w300/bg-default-28.png`
+        );
+      }
       const movieTitleText = document.createTextNode(
         movieImg.getAttribute("alt")
       );
@@ -320,7 +424,16 @@ async function getMovieById(id) {
     },
   });
 
-  const movieImgUrl = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+  let movieImgUrl;
+
+  if (movie.poster_path) {
+    movieImgUrl = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+  } else if (movie.genres[0].id){
+    movieImgUrl = `images/w300/bg-default-${movie.genres[0].id}.png`
+  } else {
+    movieImgUrl = `images/w300/bg-default-28.png`
+  }
+  
 
   headerSection.style.background = `
     linear-gradient(

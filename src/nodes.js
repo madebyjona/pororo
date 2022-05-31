@@ -30,3 +30,13 @@ const movieDetailDescription = document.querySelector('.movieDetail-description'
 const movieDetailScore = document.querySelector('.movieDetail-score');
 
 const languageOptions = document.querySelector('#language');
+
+// Elements Change Language
+const languageText = document.querySelector('#langSection label');
+const tendencesTitle = document.querySelector('.trendingPreview-title');
+const categoriesTitle = document.querySelector('.categoriesPreview-title');
+const likedTitle = document.querySelector('.liked-title');
+const relatedTitle = document.querySelector('.relatedMovies-title');
+const btnMore = document.querySelector('button.trendingPreview-btn');
+const inputSearch = document.querySelector('#searchForm input');
+
